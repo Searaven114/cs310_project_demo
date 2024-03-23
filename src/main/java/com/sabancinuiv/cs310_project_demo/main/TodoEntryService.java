@@ -1,4 +1,4 @@
-package com.sabancinuiv.cs310_project_demo.serivce;
+package com.sabancinuiv.cs310_project_demo.main;
 
 
 import org.springframework.stereotype.Service;
@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class TodoEntryService {
 
-    // main logic goes on here
+    // main logic goes on here ? idk
+
+
+
 
 }

@@ -2,7 +2,7 @@
 
 //https://www.youtube.com/watch?v=L9oWG6aj_U8
 
-package com.sabancinuiv.cs310_project_demo.model;
+package com.sabancinuiv.cs310_project_demo.main;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 
 @Document(collection = "users")
 public class User {
-
-    //Logger logger = LoggerFactory.getLogger(User.class); // use this for debugging
 
     @Id
     private String UserId;

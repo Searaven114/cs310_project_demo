@@ -1,8 +1,8 @@
-package com.sabancinuiv.cs310_project_demo.model;
+package com.sabancinuiv.cs310_project_demo.main;
 
-//NOT COMPLETED YET ! ASSUME ITS SIMILAR TO USER.JAVA
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -11,20 +11,20 @@ public class TodoEntry {
 
     @Id
     private int id;
-    private int user_id;
+    private int UserId;
     private String content;
     private String title;
-    private String category; //Enum mu yapsak ?
+    private String category;
     private boolean status;
     private LocalDateTime createDate;
-    private LocalDateTime dueDate; //Bu opsiyonel olmalı, seçmeyen birinde nasıl görünecek ? null mu yoksa boş field mi olacak ? öğren.
-    //private String summary;  //OpenAI apisi ile döndürülen "content" özetini bir değişkende mi saklayacağız ? kullanıcı özet alma seçeneği kullanmadığında ne durumda olacak bu değişken ? etc etc
+    private LocalDateTime dueDate;  //Bu opsiyonel olmalı, seçmeyen birinde nasıl görünecek ? null mu yoksa boş field mi olacak ? öğren.
+    //private String summary;       //OpenAI apisi ile döndürülen "content" özetini bir değişkende mi saklayacağız ? kullanıcı özet alma seçeneği kullanmadığında ne durumda olacak bu değişken ? etc etc
 
     public TodoEntry(){}
 
-    public TodoEntry(int id, int user_id, String content, String title, String category, boolean status, LocalDateTime createDate, LocalDateTime dueDate) {
+    public TodoEntry(int id, int UserId, String content, String title, String category, boolean status, LocalDateTime createDate, LocalDateTime dueDate) {
         this.id = id;
-        this.user_id = user_id;
+        this.UserId = UserId;
         this.content = content;
         this.title = title;
         this.category = category;
@@ -41,12 +41,12 @@ public class TodoEntry {
         this.id = id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return UserId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        UserId = userId;
     }
 
     public String getContent() {
@@ -101,7 +101,7 @@ public class TodoEntry {
     public String toString() {
         return "TodoEntry{" +
                 "id=" + id +
-                ", user_id=" + user_id +
+                ", UserId=" + UserId +
                 ", content='" + content + '\'' +
                 ", title='" + title + '\'' +
                 ", category='" + category + '\'' +
@@ -111,5 +111,4 @@ public class TodoEntry {
                 '}';
     }
 
-    //NOT COMPLETED YET ! ASSUME ITS SIMILAR TO USER.JAVA
 }

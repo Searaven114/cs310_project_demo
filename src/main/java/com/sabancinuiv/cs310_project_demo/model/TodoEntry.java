@@ -1,8 +1,7 @@
-package com.sabancinuiv.cs310_project_demo.main;
+package com.sabancinuiv.cs310_project_demo.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -10,8 +9,8 @@ import java.time.LocalDateTime;
 public class TodoEntry {
 
     @Id
-    private int id;
-    private int UserId;
+    private String id;
+    private String userId;
     private String content;
     private String title;
     private String category;
@@ -22,9 +21,9 @@ public class TodoEntry {
 
     public TodoEntry(){}
 
-    public TodoEntry(int id, int UserId, String content, String title, String category, boolean status, LocalDateTime createDate, LocalDateTime dueDate) {
+    public TodoEntry(String id, String userId, String content, String title, String category, boolean status, LocalDateTime createDate, LocalDateTime dueDate) {
         this.id = id;
-        this.UserId = UserId;
+        this.userId = userId;
         this.content = content;
         this.title = title;
         this.category = category;
@@ -33,20 +32,22 @@ public class TodoEntry {
         this.dueDate = dueDate;
     }
 
-    public int getId() {
+    //TODO timestamplı falan başka constructorlar ekle
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getUserId() {
-        return UserId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserId(int userId) {
-        UserId = userId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getContent() {
@@ -101,7 +102,7 @@ public class TodoEntry {
     public String toString() {
         return "TodoEntry{" +
                 "id=" + id +
-                ", UserId=" + UserId +
+                ", userId=" + userId +
                 ", content='" + content + '\'' +
                 ", title='" + title + '\'' +
                 ", category='" + category + '\'' +

@@ -2,7 +2,7 @@
 
 //https://www.youtube.com/watch?v=L9oWG6aj_U8
 
-package com.sabancinuiv.cs310_project_demo.main;
+package com.sabancinuiv.cs310_project_demo.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,6 +17,7 @@ public class User {
     private String UserId;
     private String username;
     private String passwordHash; //Hashing and DeHashing will be done in, will be utilized after skeleton of the project is written
+    private String secret;
     private String email;
     private String phone;
     private LocalDateTime registerDate; //Will kept just as a record
@@ -26,17 +27,17 @@ public class User {
 
     public User(){}
 
-    public User(String userId, String username, String passwordHash, String email, String phone, LocalDateTime registerDate, LocalDateTime lastLoginDate, String registerIp) {
+    public User(String userId, String username, String passwordHash, String secret, String email, String phone, LocalDateTime registerDate, LocalDateTime lastLoginDate, String registerIp) {
         UserId = userId;
         this.username = username;
         this.passwordHash = passwordHash;
+        this.secret = secret;
         this.email = email;
         this.phone = phone;
         this.registerDate = registerDate;
         this.lastLoginDate = lastLoginDate;
         this.registerIp = registerIp;
     }
-
 
     public String getUserId() {
         return UserId;
@@ -62,6 +63,14 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -78,20 +87,19 @@ public class User {
         this.phone = phone;
     }
 
-    //Implement timestamping in the backend(service part), not here or in DB
-        public LocalDateTime getRegisterDate() {
-            return registerDate;
-        }
+    public LocalDateTime getRegisterDate() {
+        return registerDate;
+    }
 
-        public void setRegisterDate(LocalDateTime registerDate) {
-            this.registerDate = registerDate;
-        }
+    public void setRegisterDate(LocalDateTime registerDate) {
+        this.registerDate = registerDate;
+    }
 
-        public LocalDateTime getLastLoginDate() {
-            return lastLoginDate;
-        }
+    public LocalDateTime getLastLoginDate() {
+        return lastLoginDate;
+    }
 
-        public void setLastLoginDate(LocalDateTime lastLoginDate) {
+    public void setLastLoginDate(LocalDateTime lastLoginDate) {
             this.lastLoginDate = lastLoginDate;
         }
 
@@ -109,6 +117,7 @@ public class User {
                 "UserId='" + UserId + '\'' +
                 ", username='" + username + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
+                ", secret='" + secret + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", registerDate=" + registerDate +
@@ -116,6 +125,4 @@ public class User {
                 ", registerIp='" + registerIp + '\'' +
                 '}';
     }
-
-
 }

@@ -1,3 +1,9 @@
 
-Register demo
-{"username": "deneme","password":"reconcraft","email":"mineridge@hotmail.com","phone":"05661267712"}
+Register dto
+    {"username": "deneme","password":"reconcraft","email":"mineridge@hotmail.com","phone":"05661267712"}
+
+login dto
+    TODO (sadece sifre ve k.adı alsın)
+
+
+

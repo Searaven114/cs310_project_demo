@@ -23,6 +23,7 @@ public class TodoEntryService {
     }
 
 
+    // takes an "TodoEntry" object and applies input check to it, returns the response in a string form
     public String validate(TodoEntry entry) {
 
         if (entry.getUserId() == null){

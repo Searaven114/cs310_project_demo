@@ -10,10 +10,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDateTime;
 
-//Çalışması için sanırım mongodb collectionuna baglı olması lazım, yoksa pom.xml'den mongo modülünü comment out et
 //Security modülü ekli, bu configi exlude etmezsen default login page koymaya zorluyor, ben disable ettim (k.adı = username, sifre = loglarda kendi veriyor)
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class Cs310ProjectDemoApplication implements CommandLineRunner {

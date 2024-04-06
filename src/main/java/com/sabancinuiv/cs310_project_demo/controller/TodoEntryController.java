@@ -11,10 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api")
@@ -81,6 +83,7 @@ public class TodoEntryController {
                 - It reduces the risk of inadvertently exposing data that might be added to the entity in the future.
                 - DTOs can be tailored to aggregate data from multiple entities, which is useful for complex data structures.
      */
+
     @PostMapping("/entries/save")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> saveEntry(@RequestBody TodoEntry input) {
@@ -91,6 +94,7 @@ public class TodoEntryController {
 
             //bu mongonun kendi generate ettigi id lerde calısmıyor olabilir(idyi manuel atarken çalışıyordu), Userde oldugu gibi buna da "aynısı varsa ekleme"
             //fonksiyonalitesini kazandırmamız lazım.
+            // TODO BURADA ID YI NULL ATA FRONTENDDEN GELEN, SEN SAVE LEDIGINDE ID KENDI ATANACAK ZATEN
             if (todoRepo.existsById(input.getId()) == true){
                 // Entry already exists with the given ID
                 return new ResponseEntity<>("An entry with the given ID already exists !", HttpStatus.CONFLICT);
@@ -99,7 +103,7 @@ public class TodoEntryController {
             System.out.print("(DEBUG) The entry given by the user does not exist in the DB, proceeding...");
 
             input.setCreateDate(LocalDateTime.now());
-            input.setStatus(false);
+            input.setStatus(true);
 
             TodoEntry savedEntry = todoRepo.save(input);
             return new ResponseEntity<>(savedEntry, HttpStatus.CREATED);
@@ -109,5 +113,7 @@ public class TodoEntryController {
         }
     }
 }
+
+
 
 

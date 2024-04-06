@@ -2,20 +2,20 @@
 
 ## Son değişimler
 
-~~Paket problemini çözdüm, artık package by layer işliyor~~ Hala bozuk ag <br>
+
 <div>
--> repository objelerini DAO olarak yeniden isimlendirdim<br>
--> TodoEntryController baya ilerledi
--> UserController register kısmı bitti, hash için algoritma eklendi.
--> Debug verisi ve life cycle takibi için @PostConstruct ve @PreDestroy kullandım.
+-> <br>
+-> <br>
+-> <br>
+-> <br>
 </div>
 
 # Notlar
 
 <div>
-<li> Şimdilik mongoDB yi dockersiz kullanalım sonrasında geçeriz dockere.</li><br>
-<li> User ve entry arasında sahibiyet bağlantısı kurulması kaldı, ya manuel ya JWT yapacaz <small>(önemli)</small> kaldı</li><br>
-<li> xx</li>
+<li> Şimdilik mongoDB yi Standalone kullanılıyor, daha sonra konteynerize edip kullanacağız docker ile.</li><br>
+<li> User ve entry arasında sahibiyet bağlantısı kurulması kaldı.</li><br>
+<li> Authorization için JWT kullanacağız. </li>
 </div>
 
 # TODO

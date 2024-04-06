@@ -2,7 +2,6 @@ package com.sabancinuiv.cs310_project_demo.service;
 import com.sabancinuiv.cs310_project_demo.model.User;
 import com.sabancinuiv.cs310_project_demo.model.UserRegistrationDTO;
 import com.sabancinuiv.cs310_project_demo.repository.UserRepository;
-import com.sabancinuiv.cs310_project_demo.repository.TodoEntryRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,7 +71,7 @@ public class UserService {
            newUser.setRegisterDate(temp);
            newUser.setLastLoginDate(temp);
 
-           String secret = generateSecret(dto.getUsername(), newUser.getPasswordHash());
+           String secret = generateToken(dto.getUsername(), newUser.getPasswordHash());
            newUser.setSecret(secret);
 
            userRepo.save(newUser);
@@ -107,28 +105,11 @@ public class UserService {
         return "SUCCESS";
     }
 
-    /*//TODO, tam denemedim kullanıcıdan POST almadıgımız için
+
     //Check https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/crypto/bcrypt/BCryptPasswordEncoder.html
 
-    public String authenticateUser(String username, String password){
 
-        User user = userRepo.findByUsername(username);
-
-        if (user == null) {
-            if (DEBUG) {
-                System.out.print("(DEBUG) USER \"" + user.getUsername() + " \" DEEMED TO BE NULL\n");
-            }
-            return "AUTH_FAILED";
-
-        }
-        if (passwordEncoder.matches(user.getPasswordHash(), passwordEncoder.encode(password))) {
-
-        } else {
-            return "AUTH_FAILED";
-        }
-    }*/
-
-    private String generateSecret(String username, String passwordHash) {
+    private String generateToken(String username, String passwordHash) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(username.toLowerCase());

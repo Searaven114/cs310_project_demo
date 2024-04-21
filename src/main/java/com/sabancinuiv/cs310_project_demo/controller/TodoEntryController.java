@@ -1,119 +1,207 @@
 package com.sabancinuiv.cs310_project_demo.controller;
 
-import com.sabancinuiv.cs310_project_demo.Cs310ProjectDemoApplication;
 import com.sabancinuiv.cs310_project_demo.model.TodoEntry;
+import com.sabancinuiv.cs310_project_demo.service.TodoEntryDTO;
+import com.sabancinuiv.cs310_project_demo.model.User;
 import com.sabancinuiv.cs310_project_demo.repository.TodoEntryRepository;
+import com.sabancinuiv.cs310_project_demo.repository.UserRepository;
+import com.sabancinuiv.cs310_project_demo.service.TodoEntryDTO_2;
 import com.sabancinuiv.cs310_project_demo.service.TodoEntryService;
-import com.sabancinuiv.cs310_project_demo.service.TodoEntryValidator;
-import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+/* TODO
+*   Display endpointlerine pagination ekle, pagination ile sort & limit eklenecegi için, sort by status gibi
+*   bir şey yapıp 2 ayrı display endpointini tek bir endpointte toplayabiliriz, Front end isteği "sort by status"
+*   olarak dondurur backend de duruma göre tamamlanmış yada tamamlanmamış entryleri döndürür.
+*
+*
+*
+* */
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class TodoEntryController {
 
-    Logger logger = LoggerFactory.getLogger(TodoEntryController.class);
+    @Autowired
+    private TodoEntryRepository todoRepo;
 
-    // Field Injection
-    @Autowired private TodoEntryRepository todoRepo;
-    @Autowired private TodoEntryValidator todoValidator;
-    @Autowired private TodoEntryService todoService;
+    @Autowired
+    private TodoEntryService todoService;
 
-    @PostConstruct
-    void init() {
-        logger.info("(DEBUG)(TodoEntryController.java) TodoEntryController has been initialized!");
-    }
+    @Autowired
+    private UserRepository userRepo;
 
-    // This will return all entries regardless of user id
+
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/entries")
-    public List<TodoEntry> getAllEntries() {
-        List<TodoEntry> entries = todoRepo.findAll();
+    public ResponseEntity<?> displayEntries(@RequestParam(required = false) String status) {
 
-        return entries;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepo.findByUsername(username);
+
+        if (user == null) {
+            return new ResponseEntity<>("UNAUTHORIZED REQUEST", HttpStatus.UNAUTHORIZED);
+        }
+
+        List<TodoEntry> entries;
+
+        if ("checked".equals(status)) {
+            entries = todoRepo.findByUserIdAndStatus(user.getUserId(), false);
+
+        } else if ("unchecked".equals(status)) {
+            entries = todoRepo.findByUserIdAndStatus(user.getUserId(), true);
+
+        } else {
+            //Status beyan edilmezse karışık döndür.
+            entries = todoRepo.findByUserId(user.getUserId());
+        }
+
+        return ResponseEntity.ok().body(entries);
     }
 
-    // This will return all entries that has the given user id in them
-    @GetMapping("/entries/{userId}")
-    public ResponseEntity<List<TodoEntry>> getAllEntriesById(@PathVariable String userId) {
 
-        List<TodoEntry> entries = todoRepo.findByUserId(userId);
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @PostMapping(value = "/entries", consumes = "application/json")
+    public ResponseEntity<?> saveEntry(@RequestBody TodoEntryDTO dto) {
 
-        if (entries.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        //Association logic
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepo.findByUsername(username);
+
+        if (user == null){
+            return new ResponseEntity<>("UNAUTHORIZED REQUEST",HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<>(entries, HttpStatus.OK);
+
+            String result = TodoEntryService.validate(dto);
+
+            if (result.equals("PASSED")) {
+
+                TodoEntry newEntry = new TodoEntry();
+
+                //Mapping logic
+                newEntry.setUserId(user.getUserId());
+                newEntry.setTitle(dto.getTitle());
+                newEntry.setContent(dto.getContent());
+                newEntry.setCategory(dto.getCategory());
+                newEntry.setStatus(dto.getStatus()); // True -> unchecked, False -> checked
+                newEntry.setCreateDate(LocalDateTime.now());
+                newEntry.setDueDate(LocalDateTime.now()); //Normalde DTO'nun user'den bir dueDate döndürmesi lazım, ben timestamp attım.
+
+                todoRepo.save(newEntry);
+
+                return new ResponseEntity<>("NEW ENTRY HAS BEEN CREATED", HttpStatus.CREATED);
+
+            } else {
+
+                //return fail message here with BAD REQUEST
+                return ResponseEntity.badRequest().body("ERROR " + result);
+            }
         }
     }
 
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @PutMapping(value = "/entries/{id}",consumes = "application/json")
+    public ResponseEntity<?> updateEntry(@PathVariable String id, @RequestBody TodoEntryDTO_2 dto) {
 
-    // This will delete the entry with given entry id
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepo.findByUsername(username);
+
+        TodoEntry targetEntry = todoRepo.findByIdAndUserId(id, user.getUserId());
+
+        if (targetEntry == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        targetEntry.setTitle(dto.getTitle());
+        targetEntry.setContent(dto.getContent());
+        targetEntry.setCategory(dto.getCategory());
+        targetEntry.setDueDate(dto.getDueDate()); // Ensure dueDate is properly handled in DTO
+
+        todoRepo.save(targetEntry);
+        return ResponseEntity.ok().body("Entry has been updated");
+    }
+
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @PatchMapping("/entries/{id}/toggle-status")
+    public ResponseEntity<?> toggleStatus(@PathVariable String id){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        User user = userRepo.findByUsername(name);
+
+        TodoEntry targetEntry = todoRepo.findByIdAndUserId(id, user.getUserId());
+
+        if (targetEntry == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Toggle the status
+        targetEntry.setStatus(!targetEntry.isStatus());
+        todoRepo.save(targetEntry);
+
+        return ResponseEntity.ok().body("ENTRY STATUS HAS BEEN UPDATED");
+
+    }
+
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @DeleteMapping("/entries/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String deleteEntry(@PathVariable String id) {    //R.P:  entries/554
+    public String deleteEntry(@PathVariable String id) {
         todoRepo.deleteById(id);
         String response = "Entry with id of " + id + " has been deleted from the database.";
         return response;
     }
 
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @DeleteMapping("/entries")
+    public ResponseEntity<?> deleteAllEntries(){
 
-    /*
-        Frontend'den ne dönecek ?
-            -> entry'i yazan user in idsi
-            -> entry titlesi
-            -> entry contenti
-            -> entry categorysi
-            -> entry due datesi
-    */
-    /*
-        TODO -> DAHA SONRA DIREKT TodoEntry objesi döndürmek yerine özel bir DTO yaz, onu döndür. arada DTO->TodoEntry ve vice versa mapper yarat.
-            çünkü:
-                - It decouples the database entity from the API response, allowing the internal model to evolve independently of the API.
-                - It prevents exposing internal details of the entity that the front-end may not need or should not know about, enhancing security.
-                - It provides the flexibility to shape the data in a way that's most convenient for the client.
-                - It reduces the risk of inadvertently exposing data that might be added to the entity in the future.
-                - DTOs can be tailored to aggregate data from multiple entities, which is useful for complex data structures.
-     */
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        User user = userRepo.findByUsername( name );
 
-    @PostMapping("/entries/save")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> saveEntry(@RequestBody TodoEntry input) {
-
-        //String validationResult = todoValidator.validate(input); // alttakinden sorun cıkarsa alttakini sil bunu kullan
-        String validationResult = todoService.validate(input);
-        if(validationResult.equals("PASSED")) {
-
-            //bu mongonun kendi generate ettigi id lerde calısmıyor olabilir(idyi manuel atarken çalışıyordu), Userde oldugu gibi buna da "aynısı varsa ekleme"
-            //fonksiyonalitesini kazandırmamız lazım.
-            // TODO BURADA ID YI NULL ATA FRONTENDDEN GELEN, SEN SAVE LEDIGINDE ID KENDI ATANACAK ZATEN
-            if (todoRepo.existsById(input.getId()) == true){
-                // Entry already exists with the given ID
-                return new ResponseEntity<>("An entry with the given ID already exists !", HttpStatus.CONFLICT);
-            }
-
-            System.out.print("(DEBUG) The entry given by the user does not exist in the DB, proceeding...");
-
-            input.setCreateDate(LocalDateTime.now());
-            input.setStatus(true);
-
-            TodoEntry savedEntry = todoRepo.save(input);
-            return new ResponseEntity<>(savedEntry, HttpStatus.CREATED);
-
+        if (user != null){
+            todoRepo.deleteAllByUserId( user.getUserId() );
+            return ResponseEntity.ok().body("ENTRIES HAS BEEN DELETED");
         } else {
-            return new ResponseEntity<>("ERROR " + validationResult + " !\n", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
         }
+
+        // Boş olsa da çalışır mı yoksa "zaten boş mu değil mi" checki yapmak lazım mı bakmak gerekir..
     }
+
+
+    @Secured({"ROLE_ADMIN"})
+    @DeleteMapping("/entries/admin/delete-all-entries")
+    public ResponseEntity<?> deleteEntryDb(){
+
+        todoRepo.deleteAll();
+
+        return ResponseEntity.ok().body("ENTRY DATABASE HAS BEEN CLEARED");
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/entries/admin/show-all-entries")
+    public ResponseEntity<?> showAllEntries(){
+
+        List<TodoEntry> entries = todoRepo.findAll();
+
+        return ResponseEntity.ok().body(entries);
+    }
+    //TODO -> "Delete Selected" için bir delete endpointi ekleyeceğiz, yada frontendde select ettiği entrylerin
+    // id leri bir JSON da tutulacak en son o JSON'dan gelen id'lere teker teker "deleteEntry" uygulanacak.
+    // Buna özel bir endpointin olması daha mantıklı geliyor bilemedim. e.g "/api/v1/entries/selected"
+
+
 }
-
-
-
-

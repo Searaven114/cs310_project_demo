@@ -4,30 +4,29 @@
 
 
 <div>
--> <br>
--> <br>
--> <br>
--> <br>
+-> Baya bişey değişti
+
 </div>
 
-# Notlar
+## Notlar
 
 <div>
-<li> Şimdilik mongoDB yi Standalone kullanılıyor, daha sonra konteynerize edip kullanacağız docker ile.</li><br>
-<li> User ve entry arasında sahibiyet bağlantısı kurulması kaldı.</li><br>
-<li> Authorization için JWT kullanacağız. </li>
+<li> Şimdilik mongoDB yi Standalone kullanılıyor, daha sonra konteynerize edip kullanacağız docker ile.</li>
+
 </div>
 
-# TODO
+## TODO
 <div>
-<li> https://beanvalidation.org/ Kullanacağız API girdi kontrolü için, DTO'lara uygulanıyor</li>
-<li> UserNotFound ve EntryNotFound exceptionu yazalım bulunmaması bulunmaması durumunda. şart degil ama sanırım </li>
-<li>  </li>
-
+<li> Controllerde kalan logic'in service layere taşınması kaldı.</li><br>
+<li> Validatorlerin yazımı tam bitmedi, REGEX checker falan eklenecekti..</li><br>
+<li> https://www.baeldung.com/spring-security-registration-i-forgot-my-password</li><br>
+<li> https://www.baeldung.com/exception-handling-for-rest-with-spring</li>
 
 </div>
 
 ## Know-how
-[Response Entity 1](https://www.youtube.com/watch?v=s39JyC4RIvc) <br>
-[IOC - DI 1](https://www.simplilearn.com/tutorials/spring-tutorial/spring-ioc-container#:~:text=The%20IoC%20container%20constructs%20an,create%20and%20manage%20objects%20manually.) <br>
-[UUID kullanımı](https://github.com/dsyer/spring-todo-mvc/blob/main/src/main/java/example/todomvc/Todo.java)
+[Response Entity 1](https://www.youtube.com/watch?v=s39JyC4RIvc)<br>
+[IOC - DI 1](https://www.simplilearn.com/tutorials/spring-tutorial/spring-ioc-container#:~:text=The%20IoC%20container%20constructs%20an,create%20and%20manage%20objects%20manually.)<br>
+[UUID kullanımı](https://github.com/dsyer/spring-todo-mvc/blob/main/src/main/java/example/todomvc/Todo.java)<br>
+[Spring Security 6](https://www.youtube.com/watch?v=1Mel8wn1HZs)<br>
+[Retreive user from Security Context](https://www.baeldung.com/get-user-in-spring-security)

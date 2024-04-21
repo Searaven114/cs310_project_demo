@@ -1,11 +1,5 @@
-package com.sabancinuiv.cs310_project_demo.model;
+package com.sabancinuiv.cs310_project_demo.service;
 
-import org.springframework.stereotype.Component;
-
-// User register sürecinde direkt user objesi yerine bu aracı obje kullanılıyor, bunun değerlerini daha sonra
-// yaratacağımız objeye maplıyoruz.
-
-@Component
 public class UserRegistrationDTO {
 
     private String username;

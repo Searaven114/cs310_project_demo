@@ -1,40 +1,32 @@
 package com.sabancinuiv.cs310_project_demo.service;
 
-
-import com.sabancinuiv.cs310_project_demo.model.TodoEntry;
 import com.sabancinuiv.cs310_project_demo.repository.TodoEntryRepository;
-import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.sabancinuiv.cs310_project_demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+//TODO -> TodoEntryController'den logic'i buraya taşımak lazım. Controllerin görevi veriyi işlemek değil, veriyi Service layer'e
+//          aktarmaktır normalde.
 @Service
 public class TodoEntryService {
-
-    Logger logger = LoggerFactory.getLogger(TodoEntryService.class);
 
     @Autowired
     TodoEntryRepository todoRepo;
 
-    @PostConstruct
-    void init(){
-        logger.info("(DEBUG)(TodoEntryService.java) TodoEntryService has been initialized!");
-    }
+    @Autowired
+    UserRepository userRepo;
 
-
-    // takes an "TodoEntry" object and applies input check to it, returns the response in a string form
-    public String validate(TodoEntry entry) {
-
-        if (entry.getUserId() == null){
-            return "USER ID CANNOT BE EMPTY";
-        } else if ( entry.getTitle() == null){
+    //Validator Bulunsun diye yaptım, detaylandırılması lazım adam gibi, title boş olamaz vs vs
+    public static String validate (TodoEntryDTO dto){
+        if (dto.getTitle() != null){
+            return "PASSED";
+        } else {
             return "TITLE CANNOT BE EMPTY";
-        } else if ( entry.getContent() == null){
-            return "CONTENT CANNOT BE EMPTY";
         }
-
-        return "PASSED";
     }
+
+
+
 
 }

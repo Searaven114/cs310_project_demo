@@ -1,20 +1,20 @@
 package com.sabancinuiv.cs310_project_demo.controller;
 
-import com.sabancinuiv.cs310_project_demo.model.UserRegistrationDTO;
+import com.sabancinuiv.cs310_project_demo.model.User;
+import com.sabancinuiv.cs310_project_demo.service.UserRegistrationDTO;
 import com.sabancinuiv.cs310_project_demo.repository.UserRepository;
 import com.sabancinuiv.cs310_project_demo.service.UserService;
-import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class UserController {
 
     @Autowired
@@ -23,37 +23,24 @@ public class UserController {
     @Autowired
     UserRepository userRepo;
 
-    Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @PostConstruct
-    void init(){
-        logger.info("(DEBUG)(UserController.java) UserController has been initialized!");
-    }
-
-    //TODO
-    //  @PostMapping("/register") YAPILDI
-    //  @PostMapping("/login")
-    //  @GetMapping("/account")
-    //  @GetMapping("/account/settings
-
-    @PostMapping("/user/register")
+    @PostMapping(value = "/user", consumes = "application/json")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDTO dto) {
 
-        // logic i "service" layere kaydırdım, todoentry de de bu yapılmalı
         String reply = userService.registerUser(dto);
 
         if (reply.equals("SUCCESS")) {
-            return ResponseEntity.ok().body("User registered successfully");
+            return new ResponseEntity<>("USER HAS BEEN REGISTERED", HttpStatus.CREATED);
         } else {
             return ResponseEntity.badRequest().body(reply);
         }
     }
 
-    //Debug için bu, normalde böyle bir listeleme olmayacak submit versiyonda
-    @GetMapping("/user")
-    public List<?> getUsers(){
-        List users = userRepo.findAll();
-        return users;
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/user/admin/show-all-users")
+    public ResponseEntity<?> getUsers(){
+        List<User> users = userRepo.findAll();
+        return ResponseEntity.ok().body(users);
     }
 
 

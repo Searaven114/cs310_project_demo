@@ -32,14 +32,8 @@ public class TodoEntry {
         this.dueDate = dueDate;
     }
 
-    //TODO timestamplı falan başka constructorlar ekle
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUserId() {

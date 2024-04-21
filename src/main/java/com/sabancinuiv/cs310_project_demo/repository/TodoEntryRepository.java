@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public interface TodoEntryRepository extends MongoRepository<TodoEntry, String> {
 
-    // Find TodoEntry by user ID
-    List<TodoEntry> findByUserId(String userId);
+    List<TodoEntry> findByUserId (String userId);
 
-    // Find TodoEntries with a certain status
-    List<TodoEntry> findByStatus(boolean status);
+    void deleteAllByUserId(String userId);
 
-    // Delete TodoEntry with given id
+    TodoEntry findByIdAndUserId(String userId, String id);
+
+    List<TodoEntry> findByUserIdAndStatus(String userId, Boolean status);
 
 }

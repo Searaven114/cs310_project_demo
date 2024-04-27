@@ -16,12 +16,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /* TODO
-*   Display endpointlerine pagination ekle, pagination ile sort & limit eklenecegi için, sort by status gibi
-*   bir şey yapıp 2 ayrı display endpointini tek bir endpointte toplayabiliriz, Front end isteği "sort by status"
-*   olarak dondurur backend de duruma göre tamamlanmış yada tamamlanmamış entryleri döndürür.
+*   Display GET endpointlerine pagination ekle
 *
 *
 *
@@ -43,7 +42,7 @@ public class TodoEntryController {
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/entries")
-    public ResponseEntity<?> displayEntries(@RequestParam(required = false) String status) {
+    public ResponseEntity<?> displayEntries(@RequestParam(required = false) String status, @RequestParam(required = false) String dueStatus) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -55,19 +54,34 @@ public class TodoEntryController {
 
         List<TodoEntry> entries;
 
+        // Fetch entries based on the status
         if ("checked".equals(status)) {
             entries = todoRepo.findByUserIdAndStatus(user.getUserId(), false);
-
         } else if ("unchecked".equals(status)) {
             entries = todoRepo.findByUserIdAndStatus(user.getUserId(), true);
-
         } else {
-            //Status beyan edilmezse karışık döndür.
             entries = todoRepo.findByUserId(user.getUserId());
+        }
+
+        // Filter entries based on due date status
+        if (dueStatus != null) {
+            LocalDateTime now = LocalDateTime.now();
+            if ("past".equals(dueStatus)) {
+                entries = entries.stream()
+                        .filter(e -> e.getDueDate() != null && e.getDueDate().isBefore(now))
+                        .sorted()
+                        .collect(Collectors.toList());
+            } else if ("future".equals(dueStatus)) {
+                entries = entries.stream()
+                        .filter(e -> e.getDueDate() != null && e.getDueDate().isAfter(now))
+                        .sorted()
+                        .collect(Collectors.toList());
+            }
         }
 
         return ResponseEntity.ok().body(entries);
     }
+
 
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
@@ -132,6 +146,8 @@ public class TodoEntryController {
         todoRepo.save(targetEntry);
         return ResponseEntity.ok().body("Entry has been updated");
     }
+
+
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @PatchMapping("/entries/{id}/toggle-status")

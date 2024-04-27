@@ -43,6 +43,11 @@ public class UserController {
         return ResponseEntity.ok().body(users);
     }
 
+    @GetMapping("/deneme123")
+    public String  RespondToLogin(){
+        return "LOGIN RESPONSE";
+    }
+
 
 }
 

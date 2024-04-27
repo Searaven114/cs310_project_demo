@@ -59,10 +59,17 @@ public class Populator {
 
         List<User> userList = userRepo.findAll();
 
+        //Status false = checked
+        //Status true= unchecked
         List<TodoEntry> entries = Arrays.asList(
                 new TodoEntry(null, userList.get(0).getUserId(), "11111111111111111", "1", "Work1", true, LocalDateTime.now(), LocalDateTime.now().plusDays(1)),
-                new TodoEntry(null, userList.get(0).getUserId(), "22222222222222222", "2", "Work2", true, LocalDateTime.now(), LocalDateTime.now().plusDays(1)),
+                new TodoEntry(null, userList.get(0).getUserId(), "22222222222222222", "2", "Work2", true, LocalDateTime.now(), LocalDateTime.now().plusDays(2)),
+                new TodoEntry(null, userList.get(0).getUserId(), "33333333333333333", "3", "Work3", true, LocalDateTime.now(), LocalDateTime.now().plusDays(3)),
                 new TodoEntry(null, userList.get(0).getUserId(), "Read a book about Spring Boot", "Personal Development", "Education", false, LocalDateTime.now(), LocalDateTime.now().plusWeeks(2)),
+                new TodoEntry(null, userList.get(0).getUserId(), "6 ay once bıttı aq", "Personal", "ffff", false, LocalDateTime.now(), LocalDateTime.now().minusYears(10)),
+                new TodoEntry(null, userList.get(0).getUserId(), "9 ay once bıttı aq", "Personal", "ffff", false, LocalDateTime.now(), LocalDateTime.now().minusYears(3)),
+                new TodoEntry(null, userList.get(0).getUserId(), "12 ay once bıttı aq", "Personal", "ffff", false, LocalDateTime.now(), LocalDateTime.now().minusYears(6)),
+
                 new TodoEntry(null, userList.get(1).getUserId(), "Plan the weekly meeting agenda", "Meeting", "Work", true, LocalDateTime.now(), LocalDateTime.now().plusHours(48)),
                 new TodoEntry(null, userList.get(2).getUserId(), "DENEME", "Meeting", "Work", true, LocalDateTime.now(), LocalDateTime.now().plusHours(48)),
                 new TodoEntry(null, userList.get(3).getUserId(), "LOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLO", "LO-LO", "lolo", true, LocalDateTime.now(), LocalDateTime.now().plusHours(48)),

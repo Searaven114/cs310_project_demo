@@ -30,6 +30,10 @@ public class TodoEntry {
         this.status = status;
         this.createDate = createDate;
         this.dueDate = dueDate;
+
+        //if ( LocalDateTime.now() > this.dueDate() )
+
+
     }
 
     public String getId() {

@@ -24,23 +24,18 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/user/admin/**").hasRole("ADMIN");
                     auth.requestMatchers("/api/v1/entries/admin/**").hasRole("ADMIN");
 
-                    auth.requestMatchers("/login","/logout");
+                    auth.requestMatchers("/api/v1/user/login", "/api/v1/user/logout").permitAll();
                     auth.requestMatchers("/api/v1/user").permitAll(); // Allows register via POST
 
-                    auth.requestMatchers("/api/v1/user/**").hasAnyRole("USER", "ADMIN");
-                    auth.requestMatchers("/api/v1/entries/**").hasAnyRole("USER", "ADMIN");
+                    auth.requestMatchers("/api/v1/user/**").permitAll();
+                    auth.requestMatchers("/api/v1/entries/**").permitAll();
 
                     auth.anyRequest().authenticated();
+
                 })
                 .formLogin(Customizer.withDefaults())
-
-                /*.formLogin(formLogin ->
-                        formLogin
-                                .loginProcessingUrl("/api/v1/user/login")
-                                .permitAll()
-                )*/
-
                 .build();
+
     }
 
     @Bean
@@ -51,3 +46,34 @@ public class SecurityConfig {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

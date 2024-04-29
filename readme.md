@@ -1,24 +1,15 @@
 # *Todo Application Project*
 
-## Son değişimler
-
-
-<div>
--> Baya bişey değişti
-
-</div>
-
 ## Notlar
 
 <div>
-<li> Şimdilik mongoDB yi Standalone kullanılıyor, daha sonra konteynerize edip kullanacağız docker ile.</li>
+<li> Şimdilik mongoDB Standalone kullanılıyor, daha sonra konteynerize edip kullanacağız docker ile.</li>
 
 </div>
 
 ## TODO
 <div>
-<li> Controllerde kalan logic'in service layere taşınması kaldı.</li><br>
-<li> Validatorlerin yazımı tam bitmedi, REGEX checker falan eklenecekti..</li><br>
+<li> Validatorlerin yazımı tam bitmedi, REGEX matcher uygulanacak.</li><br>
 <li> https://www.baeldung.com/spring-security-registration-i-forgot-my-password</li><br>
 <li> https://www.baeldung.com/exception-handling-for-rest-with-spring</li>
 

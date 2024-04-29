@@ -14,6 +14,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+    /**
+    * Filter chain configuration happens here, additionally formLogin is provided by Spring Security 5 as HTML form
+    * in the next step, we will provide a custom frontend for form data processing
+    *
+    **/
     @Bean
     protected SecurityFilterChain configure (HttpSecurity http) throws Exception{
 
@@ -24,8 +29,8 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/user/admin/**").hasRole("ADMIN");
                     auth.requestMatchers("/api/v1/entries/admin/**").hasRole("ADMIN");
 
-                    auth.requestMatchers("/api/v1/user/login", "/api/v1/user/logout").permitAll();
-                    auth.requestMatchers("/api/v1/user").permitAll(); // Allows register via POST
+                    //auth.requestMatchers("/api/v1/user/login", "/api/v1/user/logout").permitAll();
+                    auth.requestMatchers("/api/v1/user").permitAll(); //Allows register via POST
 
                     auth.requestMatchers("/api/v1/user/**").permitAll();
                     auth.requestMatchers("/api/v1/entries/**").permitAll();
@@ -38,6 +43,10 @@ public class SecurityConfig {
 
     }
 
+    /**
+    *  Passwords will be encrypted via BCrypt
+    *
+    **/
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

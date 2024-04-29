@@ -16,8 +16,8 @@ public class TodoEntry {
     private String category;
     private boolean status;
     private LocalDateTime createDate;
-    private LocalDateTime dueDate;  //Bu opsiyonel olmalı, seçmeyen birinde nasıl görünecek ? null mu yoksa boş field mi olacak ? öğren.
-    //private String summary;       //OpenAI apisi ile döndürülen "content" özetini bir değişkende mi saklayacağız ? kullanıcı özet alma seçeneği kullanmadığında ne durumda olacak bu değişken ? etc etc
+    private LocalDateTime dueDate;
+    //private String summary;      // OpenAI API'si bağladığımızda değerlendireceğiz.
 
     public TodoEntry(){}
 
@@ -30,10 +30,6 @@ public class TodoEntry {
         this.status = status;
         this.createDate = createDate;
         this.dueDate = dueDate;
-
-        //if ( LocalDateTime.now() > this.dueDate() )
-
-
     }
 
     public String getId() {

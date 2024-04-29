@@ -1,18 +1,23 @@
-package com.sabancinuiv.cs310_project_demo.service;
+package com.sabancinuiv.cs310_project_demo.dto;
+
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
-public class TodoEntryDTO_2 {
+public class TodoEntryDTO {
 
     private String title;
     private String content;
     private String category;
+    private boolean status;
     private LocalDateTime dueDate;
 
-    public TodoEntryDTO_2(String title, String content, String category, LocalDateTime dueDate) {
+
+    public TodoEntryDTO(String title, String content, String category, boolean status, LocalDateTime dueDate) {
         this.title = title;
         this.content = content;
         this.category = category;
+        this.status = status;
         this.dueDate = dueDate;
     }
 
@@ -40,6 +45,18 @@ public class TodoEntryDTO_2 {
         this.category = category;
     }
 
+    public boolean getStatus(){
+        return this.status;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     public LocalDateTime getDueDate() {
         return dueDate;
     }
@@ -50,13 +67,12 @@ public class TodoEntryDTO_2 {
 
     @Override
     public String toString() {
-        return "TodoEntryDTO_2{" +
+        return "TodoEntryDTO{" +
                 "title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", category='" + category + '\'' +
+                ", status=" + status +
                 ", dueDate=" + dueDate +
                 '}';
     }
 }
-
-

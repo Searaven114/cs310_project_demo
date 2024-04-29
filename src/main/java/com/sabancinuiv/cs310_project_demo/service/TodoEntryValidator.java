@@ -16,16 +16,20 @@ public class TodoEntryValidator {
         this.todoRepo = todoRepo;
     }
 
+    /**
+     * Simple input checker, will be extended later on with regex checkers.
+     * @param entry The entry to be processed.
+     * @return A string representing the state of the result of the process, exception handling is integrated in this string
+     */
     public String validate(TodoEntry entry) {
+        if (entry.getUserId() == null){
+            return "USER ID CANNOT BE EMPTY";
+        } else if ( entry.getTitle() == null){
+            return "TITLE CANNOT BE EMPTY";
+        } else if ( entry.getContent() == null){
+            return "CONTENT CANNOT BE EMPTY";
+        }
 
-    if (entry.getUserId() == null){
-        return "USER ID CANNOT BE EMPTY";
-    } else if ( entry.getTitle() == null){
-        return "TITLE CANNOT BE EMPTY";
-    } else if ( entry.getContent() == null){
-        return "CONTENT CANNOT BE EMPTY";
-    }
-
-    return "PASSED";
+        return "PASSED";
     }
 }

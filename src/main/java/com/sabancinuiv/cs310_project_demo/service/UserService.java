@@ -1,4 +1,5 @@
 package com.sabancinuiv.cs310_project_demo.service;
+import com.sabancinuiv.cs310_project_demo.dto.UserRegistrationDTO;
 import com.sabancinuiv.cs310_project_demo.model.User;
 import com.sabancinuiv.cs310_project_demo.repository.TodoEntryRepository;
 import com.sabancinuiv.cs310_project_demo.repository.UserRepository;
@@ -27,6 +28,11 @@ public class UserService {
     @Autowired private PasswordEncoder encoder;
 
 
+    /**
+     *
+     * @param dto Receives UserRegisterationDTO, if rest is ok, this dto gets mapped into an user object
+     * @return String that represents the result of the operation
+     */
     public String registerUser(UserRegistrationDTO dto) {
 
        String dtoValidatorResult = UserService.DtoValidator(dto);

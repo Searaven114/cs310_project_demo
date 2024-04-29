@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
+    // Homepage olarak işleyecek app'de. Buna ek Landing Page yapılacak.
     @GetMapping("/")
     public String home() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
-        return "YOU HAVE SUCCESSFULLY LOGGED IN, " + name;
+        return "You have successfully logged in, " + name;
     }
 
 

@@ -1,4 +1,4 @@
-package com.sabancinuiv.cs310_project_demo.service;
+package com.sabancinuiv.cs310_project_demo.dto;
 
 public class UserRegistrationDTO {
 
